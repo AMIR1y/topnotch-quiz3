@@ -1,0 +1,1263 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>پازل عاشقانه و خاطرات 💜🍓</title>
+    
+    <!-- فونت زیبای فارسی وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- تیلویند سی‌اس‌اس -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    },
+                    colors: {
+                        midnight: '#09061a',
+                        deepIndigo: '#19133d',
+                        royalPurple: '#3c1e70',
+                        neonBlue: '#38bdf8',
+                        neonPurple: '#c084fc',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'pop-in': 'popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-14px) rotate(5deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(168, 85, 247, 0.35)' },
+                            '50%': { boxShadow: '0 0 35px rgba(56, 189, 248, 0.55)' },
+                        },
+                        popIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.85)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: radial-gradient(circle at 15% 15%, #2e1065 0%, #17123b 45%, #09061a 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* افکت شیشه‌ای مدرن (Glassmorphism) */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 12px 40px rgba(6, 4, 24, 0.6);
+        }
+
+        .glass-btn {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.45), rgba(59, 130, 246, 0.45));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.65), rgba(56, 189, 248, 0.65));
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+
+        .glass-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* قطعات پازل کشویی با حرکت نرم */
+        .puzzle-tile {
+            position: absolute;
+            transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.28), 0 6px 14px rgba(0, 0, 0, 0.45);
+        }
+
+        .puzzle-tile:hover {
+            box-shadow: inset 0 0 0 2px rgba(192, 132, 252, 0.8), 0 8px 20px rgba(56, 189, 248, 0.4);
+            z-index: 10;
+        }
+
+        /* انیمیشن پاکت نامه سه‌بعدی */
+        .envelope-3d {
+            perspective: 1100px;
+        }
+
+        .envelope-flap {
+            transform-origin: top center;
+            transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+            backface-visibility: visible;
+        }
+
+        .envelope-opened .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 5;
+        }
+
+        .letter-sheet {
+            transition: all 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+            transform: translateY(30px) scale(0.92);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope-opened .letter-sheet {
+            transform: translateY(-35px) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* بارش ذرات عاشقانه */
+        .confetti-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            animation: fallAndSpin linear forwards;
+        }
+
+        @keyframes fallAndSpin {
+            0% {
+                transform: translateY(-40px) rotate(0deg) scale(0.7);
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(540deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        /* اسکرول بار سفارشی */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 10, 40, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #8b5cf6, #38bdf8);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- هاله‌های نوری پس‌زمینه -->
+    <div class="fixed top-[-15%] right-[-10%] w-96 h-96 bg-purple-600/25 rounded-full blur-[130px] pointer-events-none"></div>
+    <div class="fixed bottom-[-15%] left-[-10%] w-96 h-96 bg-blue-500/25 rounded-full blur-[130px] pointer-events-none"></div>
+    <div id="ambientIcons" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- هدر بالای صفحه -->
+    <header class="sticky top-0 z-40 px-4 py-3 backdrop-blur-md bg-midnight/40 border-b border-white/10">
+        <div class="max-w-3xl mx-auto flex items-center justify-between gap-2">
+            <!-- عنوان و نام پارتنر -->
+            <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg border border-white/25">
+                    <!-- آیکون SVG اختصاصی توت‌فرنگی -->
+                    <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none">
+                        <path d="M32 58C20 58 12 42 14 27C15 19 23 16 32 16C41 16 49 19 50 27C52 42 44 58 32 58Z" fill="#FF2A5F"/>
+                        <path d="M32 16C26 16 20 11 18 7C24 8 29 11 32 15C35 11 40 8 46 7C44 11 38 16 32 16Z" fill="#22C55E"/>
+                        <circle cx="24" cy="28" r="1.8" fill="#FDE047"/>
+                        <circle cx="32" cy="25" r="1.8" fill="#FDE047"/>
+                        <circle cx="40" cy="28" r="1.8" fill="#FDE047"/>
+                        <circle cx="27" cy="38" r="1.8" fill="#FDE047"/>
+                        <circle cx="37" cy="38" r="1.8" fill="#FDE047"/>
+                        <circle cx="32" cy="48" r="1.8" fill="#FDE047"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-sm sm:text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-l from-blue-300 via-purple-200 to-pink-300">
+                        پازل خاطرات <span id="headerPartnerName">عزیزم</span>
+                    </h1>
+                    <p class="text-[11px] text-blue-200/80">تکمیل کن و نامه‌ات رو بخون 💜</p>
+                </div>
+            </div>
+
+            <!-- دکمه‌های ابزار هدر -->
+            <div class="flex items-center gap-2">
+                <!-- دکمه آلبوم نامه‌ها -->
+                <button onclick="openAlbumModal()" class="glass-btn px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 relative" title="آلبوم نامه‌های باز شده">
+                    <span>💌</span>
+                    <span class="hidden sm:inline">نامه‌ها</span>
+                    <span id="unlockedBadge" class="bg-pink-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">۰</span>
+                </button>
+
+                <!-- دکمه شخصی‌سازی -->
+                <button onclick="openCustomModal()" class="glass-btn px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5" title="ساخت نسخه اختصاصی">
+                    <span>✨</span>
+                    <span class="hidden sm:inline">شخصی‌سازی</span>
+                </button>
+
+                <!-- دکمه صدا -->
+                <button onclick="toggleSound()" id="soundBtn" class="glass-panel p-2 rounded-xl text-sm hover:border-purple-400/50 transition-all" title="قطع و وصل صدا">
+                    🔊
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- بدنه اصلی برنامه -->
+    <main class="relative z-10 max-w-2xl mx-auto px-4 py-6 pb-20">
+
+        <!-- ========================================== -->
+        <!-- نما ۱: صفحه انتخاب مرحله و آپلود عکس دلخواه -->
+        <!-- ========================================== -->
+        <section id="levelSelectView" class="space-y-6 animate-pop-in">
+            
+            <!-- بنر خوش‌آمدگویی -->
+            <div class="glass-panel rounded-3xl p-5 sm:p-6 text-center space-y-3 border-purple-400/30">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-400/30 text-xs text-purple-200">
+                    <span>💙 دنیای آبی و بنفش توت‌فرنگی و شکلات 🍓🍫</span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-white">
+                    هر پازل، یک راز عاشقانه داره!
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto">
+                    قطعات هر مرحله رو کنار هم بچین تا تصویر کامل بشه و پاکت نامه مخصوص اون مرحله برات باز بشه.
+                </p>
+
+                <!-- بخش آپلود عکس دلخواه از گالری -->
+                <div class="pt-2">
+                    <label for="customImageInput" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl glass-btn cursor-pointer text-xs sm:text-sm font-semibold text-blue-100">
+                        <span>🖼️ انتخاب عکس دلخواه از گالری (عکس دونفره)</span>
+                    </label>
+                    <input type="file" id="customImageInput" accept="image/*" class="hidden" onchange="handleCustomImageUpload(event)">
+                    <div id="customImageStatus" class="hidden mt-2 text-xs text-emerald-300 flex items-center justify-center gap-2">
+                        <span>✅ عکس دلخواه شما برای پازل آماده شد!</span>
+                        <button onclick="clearCustomImage()" class="text-rose-300 underline hover:text-rose-200">(بازگشت به طرح پیش‌فرض)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- کارت‌های مراحل سه‌گانه -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="levelsGrid">
+                <!-- کارت‌ها با جاوااسکریپت ساخته می‌شوند -->
+            </div>
+
+            <!-- راهنمای کوچک گیت‌هاب پیجز -->
+            <div class="glass-panel rounded-2xl p-3.5 text-center text-[11px] text-blue-200/75 border-blue-400/20">
+                💡 نکته برای قرار دادن روی اینترنت: اگر این کد را در GitHub Pages آپلود می‌کنی، حتماً نام فایل را <code class="bg-white/10 px-1.5 py-0.5 rounded text-purple-200 font-mono">index.html</code> بگذار تا بدون خطای ۴۰۴ باز شود.
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- نما ۲: صفحه بازی پازل کشویی -->
+        <!-- ========================================== -->
+        <section id="gamePlayView" class="hidden space-y-5 animate-pop-in">
+            
+            <!-- نوار اطلاعات بالای بازی -->
+            <div class="glass-panel rounded-2xl p-3.5 flex items-center justify-between gap-2">
+                <button onclick="backToLevels()" class="glass-btn px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1">
+                    <span>➔</span>
+                    <span>مراحل</span>
+                </button>
+
+                <div class="text-center">
+                    <h3 id="currentLevelTitle" class="text-sm sm:text-base font-bold text-purple-200">مرحله اول</h3>
+                    <span id="currentGridBadge" class="text-[11px] text-blue-300">شبکه ۳×۳</span>
+                </div>
+
+                <!-- آمار حرکت و زمان -->
+                <div class="flex items-center gap-3 text-xs">
+                    <div class="bg-slate-900/60 px-2.5 py-1.5 rounded-xl border border-white/10 text-center">
+                        <span class="text-slate-400 block text-[10px]">حرکت</span>
+                        <span id="moveCounter" class="font-bold text-blue-300">۰</span>
+                    </div>
+                    <div class="bg-slate-900/60 px-2.5 py-1.5 rounded-xl border border-white/10 text-center">
+                        <span class="text-slate-400 block text-[10px]">زمان</span>
+                        <span id="timerDisplay" class="font-bold text-purple-300">۰۰:۰۰</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قاب اصلی پازل -->
+            <div class="flex flex-col items-center justify-center">
+                <div class="glass-panel p-3 sm:p-4 rounded-3xl border-purple-400/35 shadow-[0_15px_50px_rgba(88,28,135,0.45)] relative">
+                    
+                    <!-- بوم (Container) قطعات پازل -->
+                    <div id="puzzleBoard" class="relative w-[300px] h-[300px] sm:w-[360px] sm:h-[360px] rounded-2xl bg-slate-950/70 overflow-hidden border border-white/10">
+                        <!-- قطعات پازل اینجا رندر می‌شوند -->
+                    </div>
+
+                    <!-- لایه نمایش تصویر کامل (وقتی دکمه راهنما نگه داشته یا کلیک شود) -->
+                    <div id="hintOverlay" onclick="toggleHintOverlay(false)" class="hidden absolute inset-3 sm:inset-4 rounded-2xl overflow-hidden z-20 cursor-pointer border-2 border-blue-400 shadow-2xl">
+                        <img id="hintPreviewImg" src="" alt="تصویر کامل پازل" class="w-full h-full object-cover">
+                        <div class="absolute bottom-2 inset-x-2 bg-slate-950/80 backdrop-blur-md text-center py-1.5 rounded-xl text-xs text-blue-200">
+                            برای ادامه بازی روی تصویر لمس کن ✨
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دکمه‌های کنترلی پایین پازل -->
+            <div class="grid grid-cols-3 gap-2.5 max-w-md mx-auto">
+                <button onclick="toggleHintOverlay(true)" class="glass-btn py-2.5 px-2 rounded-2xl text-xs font-semibold flex flex-col items-center gap-1">
+                    <span class="text-base">👁️</span>
+                    <span>مشاهده تصویر</span>
+                </button>
+
+                <button onclick="restartCurrentLevel()" class="glass-btn py-2.5 px-2 rounded-2xl text-xs font-semibold flex flex-col items-center gap-1">
+                    <span class="text-base">🔄</span>
+                    <span>چیدمان مجدد</span>
+                </button>
+
+                <button onclick="autoSolvePuzzle()" class="glass-btn py-2.5 px-2 rounded-2xl text-xs font-semibold flex flex-col items-center gap-1 border-pink-400/40">
+                    <span class="text-base">🪄</span>
+                    <span>حل جادویی</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================== -->
+    <!-- مودال ۱: پاکت نامه سه‌بعدی بازشونده هنگام برد -->
+    <!-- ========================================== -->
+    <div id="winEnvelopeModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div class="w-full max-w-md flex flex-col items-center space-y-6 animate-pop-in">
+            
+            <div class="text-center space-y-1">
+                <span class="inline-block px-3 py-1 rounded-full bg-purple-500/30 border border-purple-400/40 text-xs text-purple-200">
+                    🎉 آفرین! پازل با موفقیت کامل شد 🎉
+                </span>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-l from-blue-300 to-pink-300">
+                    یک پاکت نامه عاشقانه داری!
+                </h3>
+            </div>
+
+            <!-- پاکت نامه سه‌بعدی -->
+            <div id="winEnvelopeBox" onclick="openWinEnvelope()" class="envelope-3d relative w-full h-72 sm:h-80 cursor-pointer group">
+                <div class="relative w-full h-full rounded-3xl bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-950 border-2 border-purple-400/50 shadow-[0_20px_60px_rgba(168,85,247,0.5)] flex flex-col items-center justify-center p-6">
+                    
+                    <!-- درِ مثلثی پاکت -->
+                    <div class="envelope-flap absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-purple-600 to-indigo-800 rounded-t-3xl border-b border-purple-300/40 z-20" style="clip-path: polygon(0 0, 100% 0, 50% 100%);"></div>
+
+                    <!-- مهر قلب روی پاکت -->
+                    <div id="winEnvelopeSeal" class="relative z-30 w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 border-2 border-white/70 shadow-[0_0_30px_rgba(236,72,153,0.8)] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                        💌
+                    </div>
+                    <p id="winEnvelopeHint" class="relative z-30 mt-3 text-xs sm:text-sm text-blue-200 font-semibold animate-bounce">
+                        روی پاکت بزن تا باز بشه ✨
+                    </p>
+
+                    <!-- کاغذ شعر و متن عاشقانه داخل پاکت -->
+                    <div class="letter-sheet absolute inset-x-3 sm:inset-x-5 top-6 bottom-3 rounded-2xl bg-gradient-to-b from-slate-900 to-indigo-950 border border-blue-400/50 p-5 shadow-2xl z-30 flex flex-col justify-between text-center overflow-y-auto">
+                        <div class="flex items-center justify-between text-sm">
+                            <span>🍓</span>
+                            <span id="letterLevelLabel" class="text-xs font-bold text-purple-300">نامه مرحله اول</span>
+                            <span>🍫</span>
+                        </div>
+
+                        <p id="winLetterText" class="text-sm sm:text-base text-slate-100 leading-7 my-2 whitespace-pre-line font-medium">
+                            <!-- متن نامه اینجا قرار می‌گیرد -->
+                        </p>
+
+                        <div class="pt-2 border-t border-white/10 text-[11px] text-blue-300">
+                            تقدیم به <span id="letterPartnerSignature" class="font-bold text-pink-300">عزیزم</span> 💜💙
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- دکمه‌های بعد از برد -->
+            <div class="flex items-center gap-3 w-full">
+                <button onclick="closeWinModalAndNext()" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-bold text-sm shadow-lg transition-all">
+                    ادامه و مرحله بعدی ➔
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- مودال ۲: آلبوم نامه‌های باز شده -->
+    <!-- ========================================== -->
+    <div id="albumModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 border-purple-400/40 space-y-4 max-h-[85vh] flex flex-col animate-pop-in">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-l from-blue-300 to-purple-300">
+                    💌 آلبوم نامه‌های عاشقانه
+                </h3>
+                <button onclick="closeAlbumModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-sm">✕</button>
+            </div>
+
+            <div id="albumListContainer" class="space-y-3 overflow-y-auto pr-1 flex-1">
+                <!-- لیست نامه‌های باز شده یا قفل شده -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- مودال ۳: پنل شخصی‌سازی نسخه اختصاصی پارتنر -->
+    <!-- ========================================== -->
+    <div id="customModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 border-purple-400/40 space-y-4 max-h-[90vh] flex flex-col animate-pop-in">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-l from-blue-300 to-pink-300">
+                    ✨ شخصی‌سازی پازل و نامه‌ها
+                </h3>
+                <button onclick="closeCustomModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-sm">✕</button>
+            </div>
+
+            <div class="space-y-3 overflow-y-auto pr-1 flex-1 text-right">
+                <div>
+                    <label class="block text-xs text-blue-200 mb-1">نام یا لقب قشنگ پارتنرت:</label>
+                    <input type="text" id="customNameInput" placeholder="مثلاً: جانانم، سارا، عشقم..." class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-purple-400/30 text-white text-sm focus:outline-none focus:border-blue-400">
+                </div>
+
+                <div>
+                    <label class="block text-xs text-purple-200 mb-1">متن نامه مرحله ۱ (قلب توت‌فرنگی و شکلات):</label>
+                    <textarea id="customMsg1" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-purple-400/30 text-white text-xs leading-relaxed focus:outline-none focus:border-blue-400"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-purple-200 mb-1">متن نامه مرحله ۲ (شب پرستاره بنفش و آبی):</label>
+                    <textarea id="customMsg2" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-purple-400/30 text-white text-xs leading-relaxed focus:outline-none focus:border-blue-400"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-purple-200 mb-1">متن نامه مرحله ۳ (شیرینی عشق بی‌پایان):</label>
+                    <textarea id="customMsg3" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-slate-900/80 border border-purple-400/30 text-white text-xs leading-relaxed focus:outline-none focus:border-blue-400"></textarea>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 flex flex-col sm:flex-row gap-2.5">
+                <button onclick="saveCustomSettings()" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-xs sm:text-sm shadow-lg">
+                    ذخیره تغییرات ✅
+                </button>
+                <button onclick="copyCustomShareLink()" class="py-2.5 px-4 rounded-xl glass-btn text-blue-200 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5">
+                    <span>کپی لینک اختصاصی</span>
+                    <span>🔗</span>
+                </button>
+            </div>
+            <p id="linkCopiedAlert" class="hidden text-center text-xs text-emerald-300">
+                لینک اختصاصی با اسم و شعرهای شما کپی شد! می‌تونی براش بفرستی 💜
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ۱. تولید تصاویر هنری پیش‌فرض با Canvas (توت‌فرنگی، شکلات، شب آبی و بنفش)
+        // ==========================================
+        function generateArtworkDataURL(levelId) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 600;
+            canvas.height = 600;
+            const ctx = canvas.getContext('2d');
+
+            if (levelId === 1) {
+                // مرحله ۱: قلب توت‌فرنگی و شکلات آب‌شده
+                const grad = ctx.createLinearGradient(0, 0, 600, 600);
+                grad.addColorStop(0, '#2e1065');
+                grad.addColorStop(0.5, '#4c1d95');
+                grad.addColorStop(1, '#1e3a8a');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 600, 600);
+
+                // هاله نور مرکزی
+                const glow = ctx.createRadialGradient(300, 300, 40, 300, 300, 270);
+                glow.addColorStop(0, 'rgba(236, 72, 153, 0.45)');
+                glow.addColorStop(1, 'rgba(30, 58, 138, 0)');
+                ctx.fillStyle = glow;
+                ctx.fillRect(0, 0, 600, 600);
+
+                // امواج شکلاتی در پایین تصویر
+                ctx.fillStyle = '#4a1d05';
+                ctx.beginPath();
+                ctx.moveTo(0, 460);
+                ctx.bezierCurveTo(150, 410, 250, 510, 400, 450);
+                ctx.bezierCurveTo(500, 410, 550, 470, 600, 440);
+                ctx.lineTo(600, 600);
+                ctx.lineTo(0, 600);
+                ctx.closePath();
+                ctx.fill();
+
+                // قلب بزرگ در مرکز
+                ctx.save();
+                ctx.translate(300, 290);
+                const heartGrad = ctx.createLinearGradient(-140, -140, 140, 140);
+                heartGrad.addColorStop(0, '#ff2a5f');
+                heartGrad.addColorStop(0.6, '#c026d3');
+                heartGrad.addColorStop(1, '#3b82f6');
+                ctx.fillStyle = heartGrad;
+                ctx.shadowColor = 'rgba(255, 42, 95, 0.6)';
+                ctx.shadowBlur = 35;
+
+                ctx.beginPath();
+                ctx.moveTo(0, 130);
+                ctx.bezierCurveTo(-180, 10, -190, -130, -85, -130);
+                ctx.bezierCurveTo(-30, -130, 0, -80, 0, -60);
+                ctx.bezierCurveTo(0, -80, 30, -130, 85, -130);
+                ctx.bezierCurveTo(190, -130, 180, 10, 0, 130);
+                ctx.fill();
+                ctx.restore();
+
+                // ایموجی‌های تزئینی توت‌فرنگی و شکلات روی بوم
+                ctx.font = '72px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🍓', 300, 275);
+                ctx.font = '48px sans-serif';
+                ctx.fillText('🍫', 130, 130);
+                ctx.fillText('💜', 470, 130);
+                ctx.fillText('💙', 130, 490);
+                ctx.fillText('🍓', 470, 490);
+
+            } else if (levelId === 2) {
+                // مرحله ۲: شب پرستاره بنفش و آبی با ماه و شکلات
+                const sky = ctx.createLinearGradient(0, 0, 0, 600);
+                sky.addColorStop(0, '#09061a');
+                sky.addColorStop(0.5, '#311068');
+                sky.addColorStop(1, '#1d4ed8');
+                ctx.fillStyle = sky;
+                ctx.fillRect(0, 0, 600, 600);
+
+                // ستاره‌های درخشان
+                for (let i = 0; i < 65; i++) {
+                    const sx = (i * 97) % 580 + 10;
+                    const sy = (i * 53) % 450 + 10;
+                    const sr = (i % 3) + 1.5;
+                    ctx.fillStyle = i % 2 === 0 ? '#bae6fd' : '#f5d0fe';
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // هلال ماه درخشان
+                ctx.save();
+                ctx.fillStyle = '#fde047';
+                ctx.shadowColor = '#fef08a';
+                ctx.shadowBlur = 40;
+                ctx.beginPath();
+                ctx.arc(300, 240, 110, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#251054';
+                ctx.beginPath();
+                ctx.arc(345, 215, 95, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                // تپه‌های بنفش و آبی پایین
+                ctx.fillStyle = '#1e1b4b';
+                ctx.beginPath();
+                ctx.arc(160, 620, 260, Math.PI, 0);
+                ctx.fill();
+
+                ctx.fillStyle = '#3b0764';
+                ctx.beginPath();
+                ctx.arc(450, 630, 270, Math.PI, 0);
+                ctx.fill();
+
+                ctx.font = '56px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('🍓', 170, 470);
+                ctx.fillText('🍫', 430, 470);
+                ctx.fillText('✨', 220, 240);
+
+            } else {
+                // مرحله ۳: شیرینی عشق بی‌پایان (ترکیب رویایی آبی، بنفش، توت‌فرنگی و شکلات)
+                const bg = ctx.createRadialGradient(300, 300, 30, 300, 300, 420);
+                bg.addColorStop(0, '#7e22ce');
+                bg.addColorStop(0.5, '#1e3a8a');
+                bg.addColorStop(1, '#09061a');
+                ctx.fillStyle = bg;
+                ctx.fillRect(0, 0, 600, 600);
+
+                // حلقه‌های نئونی هندسی
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.arc(300, 300, 210, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.strokeStyle = 'rgba(232, 121, 249, 0.55)';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.arc(300, 300, 155, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // المان‌های چهار گوشه برای راهنمایی راحت‌تر در شبکه ۴×۴
+                ctx.font = '64px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🍓', 110, 110);
+                ctx.fillText('🍫', 490, 110);
+                ctx.fillText('💙', 110, 490);
+                ctx.fillText('💜', 490, 490);
+
+                // مرکز تصویر
+                ctx.font = '90px sans-serif';
+                ctx.fillText('💝', 300, 290);
+                ctx.font = 'bold 28px Vazirmatn, sans-serif';
+                ctx.fillStyle = '#f0abfc';
+                ctx.fillText('عشق بی‌پایان', 300, 385);
+            }
+
+            return canvas.toDataURL('image/png');
+        }
+
+        // ==========================================
+        // ۲. داده‌های مراحل و پیام‌های عاشقانه پیش‌فرض
+        // ==========================================
+        const defaultData = {
+            partnerName: 'عزیزترینم',
+            levels: [
+                {
+                    id: 1,
+                    title: 'قلب توت‌فرنگی و شکلات',
+                    subtitle: 'مرحله اول • شبکه ۳×۳ (آسان)',
+                    gridSize: 3,
+                    icon: '🍓',
+                    defaultPoem: 'بودنت تو زندگیم درست مثل ترکیب توت‌فرنگی و شکلاته؛\nهم طراوت و تازگی میاره، هم شیرینی و آرامش!\nمرسی که دنیام رو قشنگ‌تر کردی. 💜💙'
+                },
+                {
+                    id: 2,
+                    title: 'شب پرستاره بنفش و آبی',
+                    subtitle: 'مرحله دوم • شبکه ۳×۳ (متوسط)',
+                    gridSize: 3,
+                    icon: '🌌',
+                    defaultPoem: 'در میان تمام ستاره‌های این آسمان آبی و بنفش،\nتو درخشان‌ترین ستاره قلب منی...\nهر لحظه با تو بودن، قشنگ‌ترین خاطره زندگی منه. ✨💙'
+                },
+                {
+                    id: 3,
+                    title: 'شیرینی عشق بی‌پایان',
+                    subtitle: 'مرحله سوم • شبکه ۴×۴ (ویژه)',
+                    gridSize: 4,
+                    icon: '🍫',
+                    defaultPoem: 'قطعه به قطعه قلبم با عشق تو کامل شد!\nتو شیرین‌ترین اتفاق زندگی منی و دوست داشتنت\nقشنگ‌ترین حس دنیاست. تا همیشه کنارتم. 🍓🍫💜'
+                }
+            ]
+        };
+
+        let appState = {
+            partnerName: defaultData.partnerName,
+            poems: [
+                defaultData.levels[0].defaultPoem,
+                defaultData.levels[1].defaultPoem,
+                defaultData.levels[2].defaultPoem
+            ],
+            unlockedLevels: [], // آرایه‌ای از شماره مراحل باز شده مثل [1, 2]
+            customImageDataUrl: null,
+            soundEnabled: true
+        };
+
+        // متغیرهای وضعیت بازی فعلی
+        let currentLevel = null;
+        let boardArray = []; // آرایه خانه ها: مقادیر 0 تا N-2 برای قطعات و N-1 برای خانه خالی
+        let emptyIndex = 0;
+        let moveCount = 0;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let isGameWon = false;
+
+        // ==========================================
+        // ۳. سیستم صوتی ملایم با Web Audio API
+        // ==========================================
+        let audioCtx = null;
+
+        function playTone(type) {
+            if (!appState.soundEnabled) return;
+            try {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                }
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                if (type === 'slide') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(480, now);
+                    osc.frequency.exponentialRampToValueAtTime(680, now + 0.09);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.12);
+                } else if (type === 'win' || type === 'envelope') {
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // آکورد شاد و رویایی
+                    notes.forEach((freq, i) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + i * 0.09);
+                        gain.gain.setValueAtTime(0.01, now + i * 0.09);
+                        gain.gain.linearRampToValueAtTime(0.14, now + i * 0.09 + 0.04);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.09 + 0.9);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + i * 0.09);
+                        osc.stop(now + i * 0.09 + 0.95);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        function toggleSound() {
+            appState.soundEnabled = !appState.soundEnabled;
+            document.getElementById('soundBtn').textContent = appState.soundEnabled ? '🔊' : '🔇';
+            if (appState.soundEnabled) playTone('slide');
+        }
+
+        // ==========================================
+        // ۴. بارگذاری و ذخیره‌سازی داده‌ها (URL و LocalStorage)
+        // ==========================================
+        function loadAppState() {
+            // ابتدا چک کردن پارامترهای URL (اگر لینک شخصی ارسال شده باشد)
+            const params = new URLSearchParams(window.location.search);
+            const urlName = params.get('to');
+            const urlM1 = params.get('m1');
+            const urlM2 = params.get('m2');
+            const urlM3 = params.get('m3');
+
+            try {
+                const saved = JSON.parse(localStorage.getItem('romantic_puzzle_state') || '{}');
+                if (saved.unlockedLevels) appState.unlockedLevels = saved.unlockedLevels;
+                if (saved.partnerName) appState.partnerName = saved.partnerName;
+                if (saved.poems && saved.poems.length === 3) appState.poems = saved.poems;
+            } catch (e) {}
+
+            if (urlName) appState.partnerName = urlName;
+            if (urlM1) appState.poems[0] = urlM1;
+            if (urlM2) appState.poems[1] = urlM2;
+            if (urlM3) appState.poems[2] = urlM3;
+
+            updateHeaderUI();
+        }
+
+        function saveAppState() {
+            try {
+                localStorage.setItem('romantic_puzzle_state', JSON.stringify({
+                    partnerName: appState.partnerName,
+                    poems: appState.poems,
+                    unlockedLevels: appState.unlockedLevels
+                }));
+            } catch (e) {}
+            updateHeaderUI();
+        }
+
+        function updateHeaderUI() {
+            document.getElementById('headerPartnerName').textContent = appState.partnerName;
+            document.getElementById('unlockedBadge').textContent = appState.unlockedLevels.length.toLocaleString('fa-IR');
+        }
+
+        // ==========================================
+        // ۵. رندر صفحه انتخاب مرحله و آپلود تصویر
+        // ==========================================
+        function renderLevelsGrid() {
+            const grid = document.getElementById('levelsGrid');
+            grid.innerHTML = '';
+
+            defaultData.levels.forEach((lvl) => {
+                const isUnlocked = appState.unlockedLevels.includes(lvl.id);
+                const previewSrc = appState.customImageDataUrl || generateArtworkDataURL(lvl.id);
+
+                const card = document.createElement('div');
+                card.className = 'glass-panel rounded-3xl p-4 flex flex-col justify-between gap-3 border-purple-400/30 hover:border-blue-400/60 transition-all cursor-pointer group hover:-translate-y-1';
+                card.onclick = () => startLevel(lvl.id);
+
+                card.innerHTML = `
+                    <div class="relative w-full aspect-square rounded-2xl overflow-hidden border border-white/15">
+                        <img src="${previewSrc}" alt="${lvl.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-2 right-2 px-2.5 py-1 rounded-full text-[11px] font-bold backdrop-blur-md ${isUnlocked ? 'bg-emerald-500/80 text-white' : 'bg-slate-900/75 text-purple-200'}">
+                            ${isUnlocked ? '✅ نامه باز شد' : '🔒 نامه مخفی'}
+                        </div>
+                    </div>
+                    <div class="text-right space-y-1">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-extrabold text-white">${lvl.title}</h3>
+                            <span class="text-lg">${lvl.icon}</span>
+                        </div>
+                        <p class="text-[11px] text-blue-200/80">${lvl.subtitle}</p>
+                    </div>
+                    <button class="w-full py-2 rounded-xl glass-btn text-xs font-bold text-white">
+                        ${isUnlocked ? 'بازی مجدد 🎮' : 'شروع پازل ✨'}
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function handleCustomImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // برش مربعی تصویر در Canvas برای تناسب کامل با پازل
+                const img = new Image();
+                img.onload = function() {
+                    const size = Math.min(img.width, img.height);
+                    const startX = (img.width - size) / 2;
+                    const startY = (img.height - size) / 2;
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 600;
+                    canvas.height = 600;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, startX, startY, size, size, 0, 0, 600, 600);
+
+                    appState.customImageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                    document.getElementById('customImageStatus').classList.remove('hidden');
+                    playTone('win');
+                    renderLevelsGrid();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearCustomImage() {
+            appState.customImageDataUrl = null;
+            document.getElementById('customImageInput').value = '';
+            document.getElementById('customImageStatus').classList.add('hidden');
+            renderLevelsGrid();
+        }
+
+        // ==========================================
+        // ۶. منطق پازل کشویی (Sliding Puzzle)
+        // ==========================================
+        function startLevel(levelId) {
+            currentLevel = defaultData.levels.find(l => l.id === levelId);
+            if (!currentLevel) return;
+
+            document.getElementById('levelSelectView').classList.add('hidden');
+            document.getElementById('gamePlayView').classList.remove('hidden');
+
+            document.getElementById('currentLevelTitle').textContent = currentLevel.title;
+            document.getElementById('currentGridBadge').textContent = `شبکه ${currentLevel.gridSize.toLocaleString('fa-IR')}×${currentLevel.gridSize.toLocaleString('fa-IR')}`;
+
+            const imgSrc = appState.customImageDataUrl || generateArtworkDataURL(currentLevel.id);
+            document.getElementById('hintPreviewImg').src = imgSrc;
+
+            initPuzzleBoard();
+        }
+
+        function backToLevels() {
+            stopTimer();
+            document.getElementById('gamePlayView').classList.add('hidden');
+            document.getElementById('levelSelectView').classList.remove('hidden');
+            renderLevelsGrid();
+        }
+
+        function initPuzzleBoard() {
+            stopTimer();
+            isGameWon = false;
+            moveCount = 0;
+            timerSeconds = 0;
+            updateStatsUI();
+
+            const N = currentLevel.gridSize;
+            const totalTiles = N * N;
+
+            // حالت حل شده اولیه: [0, 1, 2, ..., totalTiles - 1]
+            boardArray = Array.from({ length: totalTiles }, (_, i) => i);
+            emptyIndex = totalTiles - 1;
+
+            // به هم ریختن پازل با انجام حرکات مجاز (تضمین ۱۰۰٪ قابل حل بودن پازل)
+            const shuffleSteps = N === 3 ? 45 : 95;
+            let lastEmpty = -1;
+            for (let i = 0; i < shuffleSteps; i++) {
+                const neighbors = getValidNeighbors(emptyIndex, N).filter(idx => idx !== lastEmpty);
+                const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+                lastEmpty = emptyIndex;
+                // جابجایی
+                [boardArray[emptyIndex], boardArray[randomNeighbor]] = [boardArray[randomNeighbor], boardArray[emptyIndex]];
+                emptyIndex = randomNeighbor;
+            }
+
+            renderPuzzleTiles();
+            startTimer();
+        }
+
+        function getValidNeighbors(idx, N) {
+            const row = Math.floor(idx / N);
+            const col = idx % N;
+            const neighbors = [];
+            if (row > 0) neighbors.push(idx - N);
+            if (row < N - 1) neighbors.push(idx + N);
+            if (col > 0) neighbors.push(idx - 1);
+            if (col < N - 1) neighbors.push(idx + 1);
+            return neighbors;
+        }
+
+        function renderPuzzleTiles() {
+            const boardEl = document.getElementById('puzzleBoard');
+            boardEl.innerHTML = '';
+
+            const N = currentLevel.gridSize;
+            const totalTiles = N * N;
+            const emptyTileValue = totalTiles - 1;
+            const imgSrc = appState.customImageDataUrl || generateArtworkDataURL(currentLevel.id);
+
+            // محاسبه درصد اندازه هر قطعه
+            const gapPercent = 1.2;
+            const tileSizePercent = (100 - gapPercent * (N + 1)) / N;
+
+            for (let tileVal = 0; tileVal < emptyTileValue; tileVal++) {
+                const currentPos = boardArray.indexOf(tileVal);
+                const row = Math.floor(currentPos / N);
+                const col = currentPos % N;
+
+                // مختصات اصلی قطعه در تصویر کامل
+                const origRow = Math.floor(tileVal / N);
+                const origCol = tileVal % N;
+
+                const tile = document.createElement('div');
+                tile.className = 'puzzle-tile';
+                tile.id = `tile-${tileVal}`;
+                tile.style.width = `${tileSizePercent}%`;
+                tile.style.height = `${tileSizePercent}%`;
+
+                // محاسبه موقعیت با translate برای انیمیشن نرم
+                const posX = gapPercent + col * (tileSizePercent + gapPercent);
+                const posY = gapPercent + row * (tileSizePercent + gapPercent);
+                tile.style.left = '0%';
+                tile.style.top = '0%';
+                tile.style.transform = `translate(${(posX / tileSizePercent) * 100}%, ${(posY / tileSizePercent) * 100}%)`;
+
+                // پس‌زمینه تصویر برش‌خورده
+                tile.style.backgroundImage = `url(${imgSrc})`;
+                tile.style.backgroundSize = `${N * 100}% ${N * 100}%`;
+                const bgPosX = N > 1 ? (origCol / (N - 1)) * 100 : 0;
+                const bgPosY = N > 1 ? (origRow / (N - 1)) * 100 : 0;
+                tile.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
+
+                // شماره کوچک راهنما در گوشه قطعه
+                const numBadge = document.createElement('span');
+                numBadge.className = 'absolute bottom-1 right-1.5 text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-950/65 text-white/80 backdrop-blur-sm';
+                numBadge.textContent = (tileVal + 1).toLocaleString('fa-IR');
+                tile.appendChild(numBadge);
+
+                tile.onclick = () => handleTileClick(tileVal);
+                boardEl.appendChild(tile);
+            }
+        }
+
+        function handleTileClick(tileVal) {
+            if (isGameWon) return;
+
+            const N = currentLevel.gridSize;
+            const clickedPos = boardArray.indexOf(tileVal);
+            const validNeighbors = getValidNeighbors(emptyIndex, N);
+
+            if (validNeighbors.includes(clickedPos)) {
+                // جابجایی قطعه با خانه خالی
+                [boardArray[emptyIndex], boardArray[clickedPos]] = [boardArray[clickedPos], boardArray[emptyIndex]];
+                emptyIndex = clickedPos;
+
+                moveCount++;
+                updateStatsUI();
+                playTone('slide');
+                updateTilePositions();
+                checkWinCondition();
+            }
+        }
+
+        function updateTilePositions() {
+            const N = currentLevel.gridSize;
+            const totalTiles = N * N;
+            const emptyTileValue = totalTiles - 1;
+            const gapPercent = 1.2;
+            const tileSizePercent = (100 - gapPercent * (N + 1)) / N;
+
+            for (let tileVal = 0; tileVal < emptyTileValue; tileVal++) {
+                const tileEl = document.getElementById(`tile-${tileVal}`);
+                if (!tileEl) continue;
+
+                const currentPos = boardArray.indexOf(tileVal);
+                const row = Math.floor(currentPos / N);
+                const col = currentPos % N;
+
+                const posX = gapPercent + col * (tileSizePercent + gapPercent);
+                const posY = gapPercent + row * (tileSizePercent + gapPercent);
+                tileEl.style.transform = `translate(${(posX / tileSizePercent) * 100}%, ${(posY / tileSizePercent) * 100}%)`;
+            }
+        }
+
+        function checkWinCondition() {
+            const isSolved = boardArray.every((val, index) => val === index);
+            if (isSolved) {
+                isGameWon = true;
+                stopTimer();
+                playTone('win');
+                launchConfettiRain();
+
+                // ثبت مرحله در لیست باز شده‌ها
+                if (!appState.unlockedLevels.includes(currentLevel.id)) {
+                    appState.unlockedLevels.push(currentLevel.id);
+                    saveAppState();
+                }
+
+                setTimeout(() => {
+                    showWinEnvelopeModal();
+                }, 650);
+            }
+        }
+
+        function restartCurrentLevel() {
+            playTone('slide');
+            initPuzzleBoard();
+        }
+
+        function autoSolvePuzzle() {
+            if (isGameWon) return;
+            const N = currentLevel.gridSize;
+            const totalTiles = N * N;
+            boardArray = Array.from({ length: totalTiles }, (_, i) => i);
+            emptyIndex = totalTiles - 1;
+            updateTilePositions();
+            checkWinCondition();
+        }
+
+        function toggleHintOverlay(show) {
+            const overlay = document.getElementById('hintOverlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+                playTone('slide');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // تایمر و شمارنده حرکت
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                updateStatsUI();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateStatsUI() {
+            document.getElementById('moveCounter').textContent = moveCount.toLocaleString('fa-IR');
+            const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+            const secs = String(timerSeconds % 60).padStart(2, '0');
+            const faTime = `${mins}:${secs}`.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+            document.getElementById('timerDisplay').textContent = faTime;
+        }
+
+        // ==========================================
+        // ۷. پاکت نامه سه‌بعدی هنگام برد و بارش قلب و توت‌فرنگی
+        // ==========================================
+        function showWinEnvelopeModal() {
+            const modal = document.getElementById('winEnvelopeModal');
+            const box = document.getElementById('winEnvelopeBox');
+            const seal = document.getElementById('winEnvelopeSeal');
+            const hint = document.getElementById('winEnvelopeHint');
+
+            // بازنشانی حالت بسته پاکت
+            box.classList.remove('envelope-opened');
+            seal.style.opacity = '1';
+            hint.style.opacity = '1';
+
+            // تنظیم متن نامه مخصوص این مرحله
+            document.getElementById('letterLevelLabel').textContent = `نامه ${currentLevel.title}`;
+            document.getElementById('winLetterText').textContent = appState.poems[currentLevel.id - 1];
+            document.getElementById('letterPartnerSignature').textContent = appState.partnerName;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function openWinEnvelope() {
+            const box = document.getElementById('winEnvelopeBox');
+            if (box.classList.contains('envelope-opened')) return;
+
+            box.classList.add('envelope-opened');
+            document.getElementById('winEnvelopeSeal').style.opacity = '0';
+            document.getElementById('winEnvelopeHint').style.opacity = '0';
+            playTone('envelope');
+            launchConfettiRain();
+        }
+
+        function closeWinModalAndNext() {
+            const modal = document.getElementById('winEnvelopeModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+
+            if (currentLevel.id < 3) {
+                startLevel(currentLevel.id + 1);
+            } else {
+                backToLevels();
+            }
+        }
+
+        function launchConfettiRain() {
+            const emojis = ['🍓', '🍫', '💜', '💙', '✨', '💖'];
+            for (let i = 0; i < 32; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'confetti-particle text-2xl sm:text-3xl';
+                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = Math.random() * 96 + 'vw';
+                    el.style.animationDuration = (2.2 + Math.random() * 1.8) + 's';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 4000);
+                }, i * 50);
+            }
+        }
+
+        // ==========================================
+        // ۸. آلبوم نامه‌های باز شده
+        // ==========================================
+        function openAlbumModal() {
+            playTone('slide');
+            const container = document.getElementById('albumListContainer');
+            container.innerHTML = '';
+
+            defaultData.levels.forEach((lvl, idx) => {
+                const isUnlocked = appState.unlockedLevels.includes(lvl.id);
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-2xl border ${isUnlocked ? 'bg-indigo-950/70 border-purple-400/40' : 'bg-slate-900/50 border-white/10 opacity-75'}`;
+
+                if (isUnlocked) {
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-purple-300">${lvl.icon} ${lvl.title}</span>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">باز شده ✅</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-100 leading-6 whitespace-pre-line">${appState.poems[idx]}</p>
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-300">🔒 ${lvl.title}</span>
+                            <button onclick="closeAlbumModal(); startLevel(${lvl.id});" class="text-[11px] text-blue-300 underline">تکمیل پازل برای باز کردن</button>
+                        </div>
+                    `;
+                }
+                container.appendChild(item);
+            });
+
+            const modal = document.getElementById('albumModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAlbumModal() {
+            const modal = document.getElementById('albumModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // ==========================================
+        // ۹. پنل شخصی‌سازی و کپی لینک اختصاصی
+        // ==========================================
+        function openCustomModal() {
+            playTone('slide');
+            document.getElementById('customNameInput').value = appState.partnerName === defaultData.partnerName ? '' : appState.partnerName;
+            document.getElementById('customMsg1').value = appState.poems[0];
+            document.getElementById('customMsg2').value = appState.poems[1];
+            document.getElementById('customMsg3').value = appState.poems[2];
+            document.getElementById('linkCopiedAlert').classList.add('hidden');
+
+            const modal = document.getElementById('customModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCustomModal() {
+            const modal = document.getElementById('customModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function saveCustomSettings() {
+            const nameVal = document.getElementById('customNameInput').value.trim();
+            appState.partnerName = nameVal || defaultData.partnerName;
+            appState.poems[0] = document.getElementById('customMsg1').value.trim() || defaultData.levels[0].defaultPoem;
+            appState.poems[1] = document.getElementById('customMsg2').value.trim() || defaultData.levels[1].defaultPoem;
+            appState.poems[2] = document.getElementById('customMsg3').value.trim() || defaultData.levels[2].defaultPoem;
+
+            saveAppState();
+            playTone('win');
+            closeCustomModal();
+        }
+
+        function copyCustomShareLink() {
+            saveCustomSettings();
+            openCustomModal(); // باز نگه داشتن مودال برای نمایش پیام تایید
+
+            const baseUrl = window.location.href.split('?')[0];
+            const params = new URLSearchParams({
+                to: appState.partnerName,
+                m1: appState.poems[0],
+                m2: appState.poems[1],
+                m3: appState.poems[2]
+            });
+
+            const shareUrl = `${baseUrl}?${params.toString()}`;
+            const temp = document.createElement('textarea');
+            temp.value = shareUrl;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+
+            document.getElementById('linkCopiedAlert').classList.remove('hidden');
+            playTone('slide');
+        }
+
+        // ایجاد المان‌های معلق ملایم در پس‌زمینه
+        function spawnAmbientIcons() {
+            const container = document.getElementById('ambientIcons');
+            const icons = ['🍓', '🍫', '💜', '💙', '✨'];
+            for (let i = 0; i < 14; i++) {
+                const span = document.createElement('span');
+                span.textContent = icons[i % icons.length];
+                span.className = 'absolute text-2xl opacity-15 animate-float';
+                span.style.left = (Math.random() * 92) + '%';
+                span.style.top = (Math.random() * 92) + '%';
+                span.style.animationDelay = (Math.random() * 4) + 's';
+                container.appendChild(span);
+            }
+        }
+
+        // اجرای اولیه
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAppState();
+            spawnAmbientIcons();
+            renderLevelsGrid();
+        });
+    </script>
+</body>
+</html>
+```
